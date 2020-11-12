@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 public class ConfirmationFragment extends Fragment {
 
@@ -15,6 +16,12 @@ public class ConfirmationFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_confirmation, container, false);
+        String recipient = getArguments().getString("recipient");
+        int amount = getArguments().getInt("amount");
+
+        View view = inflater.inflate(R.layout.fragment_confirmation, container, false);
+        TextView tv = view.findViewById(R.id.confirmation_message);
+        tv.setText(String.format("$%d was sent to recipient %s", amount, recipient));
+        return view;
     }
 }

@@ -8,24 +8,35 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.TextView;
 
 
 public class SpecifyAmountFragment extends Fragment implements View.OnClickListener {
 
     NavController navController;
+    private String recipient;
+    private EditText amountInput;
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        navController = Navigation.findNavController(view);
+        recipient = getArguments().getString("recipient");
+        Log.i("INFO","Recipient is: " + recipient);
 
         view.findViewById(R.id.cancel_btn).setOnClickListener(this);
         view.findViewById(R.id.send_btn).setOnClickListener(this);
+        this.amountInput = view.findViewById(R.id.input_amount);
 
 
-        navController = Navigation.findNavController(view);
+
+
     }
 
     @Override
@@ -41,9 +52,24 @@ public class SpecifyAmountFragment extends Fragment implements View.OnClickListe
 
         switch (v.getId()) {
 
-
             case R.id.send_btn:
-                navController.navigate(R.id.action_specifyAmountFragment_to_confirmationFragment);
+
+                String amount = amountInput.getText().toString();
+                if(!TextUtils.isEmpty(amount)){
+                    Bundle bundle = new Bundle();
+                    try {
+
+                        bundle.putInt("amount",Integer.parseInt(amount));
+                        bundle.putString("recipient", this.recipient);
+                        navController.navigate(R.id.action_specifyAmountFragment_to_confirmationFragment,bundle);
+
+                    }catch(NumberFormatException ex){
+                        Log.i("INFO", ex.getMessage());
+
+                    }
+
+
+                }
                 break;
 
             case R.id.cancel_btn:
